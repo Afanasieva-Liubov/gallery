@@ -4,7 +4,7 @@ import afanasievald.databaseEntity.Folder;
 import afanasievald.databaseEntity.Photo;
 import afanasievald.repository.FolderRepository;
 import afanasievald.repository.PhotoRepository;
-import afanasievald.uploadingPhoto.PhotoStorageService;
+import afanasievald.uploadingPhoto.PhotoStorageServiceDev;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,9 +17,7 @@ import static org.mockito.Mockito.*;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.io.IOException;
 import java.util.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,7 +31,7 @@ class WorkControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PhotoStorageService storageService;
+    private PhotoStorageServiceDev storageService;
 
     @MockBean
     private PhotoRepository photoRepository;
@@ -91,18 +89,21 @@ class WorkControllerTest {
 
     @Test
     void testShowOnePhoto_NotFoundPhoto() throws Exception {
+        Photo photo = new Photo(1L, new Folder(), "photo.jpg", "description");
+        when(photoRepository.findByIdentifier(1L)).thenReturn(Optional.of(photo));
         mockMvc.perform(get("/gallery/showOnePhoto/1"))
                 .andExpect(handler().handlerType(WorkController.class))
                 .andExpect(handler().methodName("showOnePhoto"))
                 .andExpect(status().isNotFound())
                 .andReturn();
-        verify(storageService, times(1)).loadPhotoAsResource(photoRepository, 1L);
+        verify(storageService, times(1)).loadPhotoAsResource(photo);
     }
 
     @Test
     void testShowOnePhoto_WithPhoto() throws Exception {
-        when(storageService.loadPhotoAsResource(photoRepository, 1L))
-                .thenReturn("mockphoto".getBytes());
+        Photo photo = new Photo(1L, new Folder(), "photo.jpg", "description");
+        when(photoRepository.findByIdentifier(1L)).thenReturn(Optional.of(photo));
+        when(storageService.loadPhotoAsResource(photo)).thenReturn("mockphoto".getBytes());
 
         mockMvc.perform(get("/gallery/showOnePhoto/1"))
                 .andExpect(handler().handlerType(WorkController.class))

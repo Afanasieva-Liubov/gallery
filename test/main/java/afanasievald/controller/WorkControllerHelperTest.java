@@ -1,10 +1,11 @@
 package afanasievald.controller;
 
+import afanasievald.controller.WorkControllerHelper;
 import afanasievald.databaseEntity.Folder;
 import afanasievald.databaseEntity.Photo;
 import afanasievald.repository.FolderRepository;
 import afanasievald.repository.PhotoRepository;
-import afanasievald.uploadingPhoto.PhotoStorageService;
+import afanasievald.uploadingPhoto.PhotoStorageServiceDev;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
 class WorkControllerHelperTest {
 
     @MockBean
-    private PhotoStorageService storageService;
+    private PhotoStorageServiceDev storageService;
 
     @Autowired
     private PhotoRepository photoRepository;

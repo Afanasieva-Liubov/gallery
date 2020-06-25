@@ -1,4 +1,4 @@
-package afanasievald.datasource;
+package afanasievald.repository;
 
 import afanasievald.databaseEntity.Folder;
 import afanasievald.databaseEntity.Photo;

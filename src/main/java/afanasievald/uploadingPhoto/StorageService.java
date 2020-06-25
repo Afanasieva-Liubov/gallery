@@ -1,7 +1,6 @@
 package afanasievald.uploadingPhoto;
 
 import afanasievald.databaseEntity.Photo;
-import afanasievald.repository.PhotoRepository;
 import org.jetbrains.annotations.NotNull;
 
 public interface StorageService {
@@ -9,5 +8,5 @@ public interface StorageService {
 
     boolean deletePhoto(@NotNull Photo photo);
 
-    byte[] loadPhotoAsResource(@NotNull PhotoRepository photoRepository, long identifier);
+    byte[] loadPhotoAsResource(@NotNull Photo photo);
 }

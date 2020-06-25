@@ -1,30 +1,34 @@
 package afanasievald.uploadingPhoto;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import afanasievald.databaseEntity.Photo;
-import afanasievald.repository.PhotoRepository;
 import afanasievald.uploadingPhoto.image.ImageRotation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+@Profile({"dev", "test", "default"})
 @Service
-public class PhotoStorageService implements StorageService {
+public class PhotoStorageServiceDev implements StorageService {
     @NotNull
     private final String photoLocation;
 
     @NotNull
-    private final Logger LOGGER = LogManager.getLogger(PhotoStorageService.class.getName());
+    private final Logger LOGGER = LogManager.getLogger(PhotoStorageServiceDev.class.getName());
 
     @Autowired
-    public PhotoStorageService(StorageProperties properties) throws IOException {
+    public PhotoStorageServiceDev(StorageProperties properties) throws IOException {
         this.photoLocation = properties.getPhotoLocation();
         Path photoLocationPath = Paths.get(this.photoLocation);
         if (!Files.exists(photoLocationPath)) {
@@ -42,7 +46,9 @@ public class PhotoStorageService implements StorageService {
         Path fileNameAndPath = Paths.get(photoLocation, fileName);
         Photo photo = new Photo();
         try {
-            String mimeType = Files.probeContentType(fileNameAndPath);
+            InputStream is = new BufferedInputStream(new ByteArrayInputStream(byteArray));
+            String mimeType = URLConnection.guessContentTypeFromStream(is);
+
             if (mimeType == null || !mimeType.startsWith("image/")) {
                 LOGGER.info(String.format("File %s isn't image", fileNameAndPath));
                 return null;
@@ -81,14 +87,8 @@ public class PhotoStorageService implements StorageService {
     }
 
     @Override
-    public byte[] loadPhotoAsResource(@NotNull PhotoRepository photoRepository, long identifier){
-        Optional<Photo> photo = photoRepository.findByIdentifier(identifier);
-        if (!photo.isPresent()) {
-            LOGGER.info(String.format("Photo with identifier %d doesn't exist", identifier));
-            return null;
-        }
-
-        String fileName = photo.get().getName();
+    public byte[] loadPhotoAsResource(@NotNull Photo photo){
+        String fileName = photo.getName();
         if (fileName.isEmpty()) {
             LOGGER.info(String.format("Photo %s is empty", fileName));
             return null;

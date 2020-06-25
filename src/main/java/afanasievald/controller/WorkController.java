@@ -4,7 +4,6 @@ import afanasievald.databaseEntity.Photo;
 import afanasievald.repository.DatasourceHelper;
 import afanasievald.repository.FolderRepository;
 import afanasievald.repository.PhotoRepository;
-import afanasievald.uploadingPhoto.PhotoStorageService;
 import afanasievald.uploadingPhoto.StorageService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +26,7 @@ import java.util.*;
 @Controller
 public class WorkController {
     @NotNull
-    private final Logger LOGGER = LogManager.getLogger(PhotoStorageService.class.getName());
+    private final Logger LOGGER = LogManager.getLogger(WorkController.class.getName());
 
     @NotNull
     private final StorageService storageService;
@@ -67,7 +66,13 @@ public class WorkController {
 
     @GetMapping("/gallery/showOnePhoto/{identifier}")
     public ResponseEntity<?> showOnePhoto(@PathVariable long identifier) {
-        byte[] byteArray = storageService.loadPhotoAsResource(photoRepository, identifier);
+        Optional<Photo> photo = photoRepository.findByIdentifier(identifier);
+        if (!photo.isPresent()) {
+            LOGGER.info(String.format("Photo with identifier %d doesn't exist", identifier));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error loading photo");
+        }
+
+        byte[] byteArray = storageService.loadPhotoAsResource(photo.get());
         if (byteArray == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error loading photo");
         }
