@@ -133,6 +133,12 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.798</version>
         </dependency>
+        <dependency>
+            <groupId>io.findify</groupId>
+            <artifactId>s3mock_2.13</artifactId>
+            <version>0.2.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

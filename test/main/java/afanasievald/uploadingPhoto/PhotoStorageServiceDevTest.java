@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringJUnitConfig
 @DataJpaTest
 @ComponentScan("afanasievald.uploadingPhoto")
-@ActiveProfiles("test")
+@ActiveProfiles("testdev")
 class PhotoStorageServiceDevTest {
 
     @Autowired
@@ -32,12 +32,7 @@ class PhotoStorageServiceDevTest {
     private FolderRepository folderRepository;
 
     @Autowired
-    private PhotoStorageServiceDev storageService;
-
-    @Test
-    void test() {
-        assertNull(null);
-    }
+    private StorageService storageService;
 
     @Test
     void testPhotoStorageService_CorrectPhotoLocation() throws IOException {

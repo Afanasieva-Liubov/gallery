@@ -5,11 +5,14 @@ import afanasievald.databaseEntity.Photo;
 import afanasievald.repository.FolderRepository;
 import afanasievald.repository.PhotoRepository;
 import afanasievald.uploadingPhoto.PhotoStorageServiceDev;
+import afanasievald.uploadingPhoto.StorageService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +34,7 @@ class WorkControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PhotoStorageServiceDev storageService;
+    private StorageService storageService;
 
     @MockBean
     private PhotoRepository photoRepository;
@@ -155,6 +158,7 @@ class WorkControllerTest {
                 .andReturn()
                 .getModelAndView();
 
+        assertNotNull(modelAndView);
         assertEquals(modelAndView.getViewName(), "folder");
         Boolean isUploadable = (Boolean) modelAndView.getModel().get("isUploadable");
         assertFalse(isUploadable);
@@ -194,7 +198,7 @@ class WorkControllerTest {
         Photo photo1 = new Photo(1L, folder, "photo1.jpg", "description");
         MockMultipartFile firstFile = new MockMultipartFile("files", photo1.getName(), "image/jpeg", photo1.getName().getBytes()) {
             @Override
-            public byte[] getBytes() throws IOException {
+            public byte @NotNull [] getBytes() throws IOException {
                 throw new IOException("io exception");
             }
         };
