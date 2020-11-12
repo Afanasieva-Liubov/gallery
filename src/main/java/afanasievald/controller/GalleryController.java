@@ -20,14 +20,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.io.IOException;
 import java.util.*;
 
 @Controller
-public class WorkController {
+public class GalleryController {
     @NotNull
-    private final Logger LOGGER = LogManager.getLogger(WorkController.class.getName());
+    private final Logger LOGGER = LogManager.getLogger(GalleryController.class.getName());
 
     @NotNull
     private final StorageService storageService;
@@ -39,7 +38,7 @@ public class WorkController {
     private final PhotoRepository photoRepository;
 
     @Autowired
-    public WorkController(@NotNull StorageService storageService,
+    public GalleryController(@NotNull StorageService storageService,
                           @NotNull FolderRepository folderRepository,
                           @NotNull PhotoRepository photoRepository) {
         this.storageService = storageService;
@@ -115,7 +114,7 @@ public class WorkController {
                     file.getBytes();
                 }
 
-                isOk = isOk && WorkControllerHelper.uploadOnePhoto(storageService,
+                isOk = isOk && GalleryControllerHelper.uploadOnePhoto(storageService,
                         folderRepository,
                         photoRepository,
                         folderName,
@@ -150,8 +149,8 @@ public class WorkController {
     {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("error");
-        modelAndView.addObject("message", "В программе произошла ошибка, обратитесь к администратору");
-        LOGGER.error(e.getMessage(), e);
+        modelAndView.addObject("message", "An error has occurred in the program, contact the administrator");
+        LOGGER.error(e);
         return modelAndView;
     }
 }

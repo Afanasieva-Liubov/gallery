@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 @SpringJUnitConfig
 @DataJpaTest
-class WorkControllerHelperTest {
+class GalleryControllerHelperTest {
 
     @MockBean
     private StorageService storageService;
@@ -33,7 +33,7 @@ class WorkControllerHelperTest {
     void testUploadOnePhoto_PhotoNotUploadToDisk() {
         String fileName = "fileName";
         when(storageService.uploadPhotos(fileName, fileName.getBytes())).thenReturn(null);
-        boolean isUploaded = WorkControllerHelper.uploadOnePhoto(storageService,
+        boolean isUploaded = GalleryControllerHelper.uploadOnePhoto(storageService,
                 folderRepository,
                 photoRepository, "",
                 fileName,
@@ -47,7 +47,7 @@ class WorkControllerHelperTest {
         String fileName = "fileName";
         when(storageService.uploadPhotos(fileName, fileName.getBytes())).thenReturn(photo);
 
-        boolean isUploaded = WorkControllerHelper.uploadOnePhoto(storageService,
+        boolean isUploaded = GalleryControllerHelper.uploadOnePhoto(storageService,
                 folderRepository,
                 photoRepository, "fake name",
                 fileName,
@@ -64,7 +64,7 @@ class WorkControllerHelperTest {
         photo.setIdentifier(1L);
         when(storageService.uploadPhotos(photo.getName(), "photo".getBytes())).thenReturn(photo);
 
-        boolean isUploaded = WorkControllerHelper.uploadOnePhoto(storageService,
+        boolean isUploaded = GalleryControllerHelper.uploadOnePhoto(storageService,
                 folderRepository,
                 photoRepository,
                 folder.getName(),

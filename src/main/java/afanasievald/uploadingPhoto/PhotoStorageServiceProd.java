@@ -32,7 +32,6 @@ public class PhotoStorageServiceProd implements StorageService {
     @Autowired
     public PhotoStorageServiceProd(StorageProperties properties){
         this.bucketName = properties.getBucketName();
-        //this.s3Client = s3Service.getClient();
     }
 
     private AmazonS3 getClient(){
@@ -68,7 +67,7 @@ public class PhotoStorageServiceProd implements StorageService {
                     metadata));
 
         } catch (SdkClientException | IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return null;
         }
         return photo;
@@ -85,7 +84,7 @@ public class PhotoStorageServiceProd implements StorageService {
             getClient().deleteObject(bucketName, String.valueOf(photo.getIdentifier()));
 
         } catch (AmazonServiceException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return false;
         }  catch (SdkClientException e)  {
             LOGGER.error(String.format("Photo with identifier %d isn't deleted from bucket %s",
@@ -115,7 +114,7 @@ public class PhotoStorageServiceProd implements StorageService {
 
             return object.getObjectContent().readAllBytes();
         } catch (SdkClientException | IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return null;
         }
     }

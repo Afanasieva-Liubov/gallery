@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class WorkControllerTest {
+class GalleryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,7 +75,7 @@ class WorkControllerTest {
     @Test
     void testViewPhoto_WithoutFolders() throws Exception {
         Map<String, Object> model = Objects.requireNonNull(mockMvc.perform(get("/gallery"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("viewPhoto"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(2))
@@ -95,7 +95,7 @@ class WorkControllerTest {
         Photo photo = new Photo(1L, new Folder(), "photo.jpg", "description");
         when(photoRepository.findByIdentifier(1L)).thenReturn(Optional.of(photo));
         mockMvc.perform(get("/gallery/showOnePhoto/1"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("showOnePhoto"))
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -109,7 +109,7 @@ class WorkControllerTest {
         when(storageService.loadPhotoAsResource(photo)).thenReturn("mockphoto".getBytes());
 
         mockMvc.perform(get("/gallery/showOnePhoto/1"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("showOnePhoto"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.IMAGE_JPEG))
@@ -127,7 +127,7 @@ class WorkControllerTest {
         when(photoRepository.findByFolder(folder)).thenReturn(photos);
 
         Map<String, Object> model = Objects.requireNonNull(mockMvc.perform(get(String.format("/gallery/folder/%s", folder.getName())))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("viewPhotoInFolder"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(2))
@@ -149,7 +149,7 @@ class WorkControllerTest {
     @Test
     void testViewPhotoInFolder_WithoutFolder() throws Exception {
         ModelAndView modelAndView = mockMvc.perform(get("/gallery/folder/notExistingFolder"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("viewPhotoInFolder"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(2))
@@ -167,7 +167,7 @@ class WorkControllerTest {
     @Test
     void testUploadPhoto_WithoutFiles() throws Exception {
         mockMvc.perform(multipart("/gallery/folder/upload/folderName"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("uploadPhoto"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().size(0))
@@ -182,7 +182,7 @@ class WorkControllerTest {
         MockMultipartFile firstFile = new MockMultipartFile("files", null, "text/plain", (byte[]) null);
         mockMvc.perform(MockMvcRequestBuilders.multipart("/gallery/folder/upload/folderName")
                 .file(firstFile))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("uploadPhoto"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().size(0))
@@ -205,7 +205,7 @@ class WorkControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/gallery/folder/upload/folderName")
                 .file(firstFile))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("uploadPhoto"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().size(0))
@@ -220,7 +220,7 @@ class WorkControllerTest {
         MockMultipartFile firstFile = new MockMultipartFile("files", "notExistingFile.txt", "text/plain", "notExistingFile".getBytes());
         mockMvc.perform(MockMvcRequestBuilders.multipart("/gallery/folder/upload/folderName")
                 .file(firstFile))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("uploadPhoto"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().size(0))
@@ -246,7 +246,7 @@ class WorkControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart(String.format("/gallery/folder/upload/%s", folder.getName()))
                 .file(firstFile)
                 .file(secondFile))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("uploadPhoto"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().size(0))
@@ -264,7 +264,7 @@ class WorkControllerTest {
         mockMvc.perform(post("/photo/changedescription")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("{\"identifier\":1,\"description\":\"description\"}"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("changeDescription"))
                 .andExpect(status().isOk());
     }
@@ -274,7 +274,7 @@ class WorkControllerTest {
         mockMvc.perform(post("/photo/changedescription")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("{\"identifier\":1,\"description\":\"description\"}"))
-                .andExpect(handler().handlerType(WorkController.class))
+                .andExpect(handler().handlerType(GalleryController.class))
                 .andExpect(handler().methodName("changeDescription"))
                 .andExpect(status().isInternalServerError());
     }

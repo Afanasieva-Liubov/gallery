@@ -16,11 +16,19 @@ public class DatasourceHelper {
     }
 
     /**
+     * If there isn't any folders, returns empty map.
+     * If there are folders, returns map of folders. Key in this map is folder's name.
+     * If there some photos in this folder, than value in this map is identifier of photo
+     * with minimum CreatedDate, otherwise null.
+     *
      * @param folderRepository
      * @param photoRepository
-     * @return Map<String, Long>, where String is Name of Folder, Long is Identifier of Photo with min CreatedDate in this Folder.
-     * Map is sorted by CreatedDate of Folder.
+     * @return an {@code Map<String, Long>}, if photos are present.
+     * Key in this map is folder's name. If there some photos in this folder,
+     * than value in this map is identifier of photo with minimum CreatedDate, otherwise null.
+     * Otherwise empty {@code Map<String, Long>}, if there isn't any folders.
      */
+
     public static Map<String, Long> getFoldersWithPhoto(@NotNull FolderRepository folderRepository,
                                                         @NotNull PhotoRepository photoRepository) {
         Iterable<Folder> folders = folderRepository.findByOrderByCreatedDateAsc();
@@ -38,10 +46,18 @@ public class DatasourceHelper {
     }
 
     /**
+     * If a folder with this folderName is not present, returns null.
+     * If a folder with this folderName is present, the folder doesn't contain photos,
+     * returns empty list.
+     * If a folder whit this folderName is present, the folder contains photos,
+     * returns list of Photos sorted by CreatedDate.
+     *
      * @param folderRepository
      * @param photoRepository
      * @param folderName
-     * @return photos sorted by CreatedDate
+     * @return an {@code List<Photo>}, if a folder is present and contains photos,
+     * otherwise empty {@code List<Photo>}, if folder is present and doesn't contain photo,
+     * otherwise null {@code List<Photo>}, if folder isn't present.
      */
     public static List<Photo> getPhotosFromFolder(@NotNull FolderRepository folderRepository,
                                                   @NotNull PhotoRepository photoRepository,
@@ -84,7 +100,7 @@ public class DatasourceHelper {
             photoRepository.save(photo);
             return true;
         } catch(JDBCException e){
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return false;
         }
     }
@@ -103,7 +119,7 @@ public class DatasourceHelper {
             photoRepository.save(realPhoto);
             return true;
         } catch(JDBCException e){
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return false;
         }
     }

@@ -15,20 +15,18 @@ public class StorageProperties {
 
     private String bucketName;
 
-    private String accessKey;
-
-    private String secretKey;
-
     private String serviceEndpoint;
+
+    private String region;
+
+    private String port;
 
     public StorageProperties() {
     }
 
-    public StorageProperties(String photoLocation, String bucketName, String accessKey, String secretKey) {
+    public StorageProperties(String photoLocation, String bucketName) {
         this.photoLocation = photoLocation;
         this.bucketName = bucketName;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
     }
 
     public @NotNull String getPhotoLocation() {
@@ -47,27 +45,27 @@ public class StorageProperties {
         this.bucketName = bucketName;
     }
 
-    public String getAccessKey() {
-        return accessKey;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
     public String getServiceEndpoint() {
         return serviceEndpoint;
     }
 
     public void setServiceEndpoint(String serviceEndpoint) {
         this.serviceEndpoint = serviceEndpoint;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 }

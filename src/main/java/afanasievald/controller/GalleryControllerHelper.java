@@ -7,9 +7,9 @@ import afanasievald.repository.PhotoRepository;
 import afanasievald.uploadingPhoto.StorageService;
 import org.jetbrains.annotations.NotNull;
 
-public class WorkControllerHelper {
+public class GalleryControllerHelper {
 
-    private WorkControllerHelper() {
+    private GalleryControllerHelper() {
     }
 
     public static boolean uploadOnePhoto(@NotNull StorageService storageService,

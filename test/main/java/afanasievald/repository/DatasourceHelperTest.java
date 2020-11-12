@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.sql.SQLException;
@@ -29,6 +30,9 @@ class DatasourceHelperTest {
 
     @Autowired
     private FolderRepository folderRepository;
+
+    @MockBean(name="fakePhotoRepository")
+    PhotoRepository fakePhotoRepository;
 
     @Test /*Без папок вернуть пустой объект>*/
     void testGetFoldersWithPhoto_EmptyFolders() {
@@ -137,74 +141,7 @@ class DatasourceHelperTest {
         Photo photo = new Photo();
         photo.setIdentifier(1L);
         photo.setName("filename");
-
-        PhotoRepository fakePhotoRepository = new PhotoRepository() {
-            @Override
-            public List<Photo> findByFolder(@NotNull Folder folder) {
-                return null;
-            }
-
-            @Override
-            public Optional<Photo> findByIdentifier(long identifier) {
-                return Optional.empty();
-            }
-
-            @Override
-            public <S extends Photo> S save(S entity) {
-                throw new JDBCException("JDBCException", new SQLException());
-            }
-
-            @Override
-            public <S extends Photo> Iterable<S> saveAll(Iterable<S> entities) {
-                return null;
-            }
-
-            @Override
-            public Optional<Photo> findById(Integer integer) {
-                return Optional.empty();
-            }
-
-            @Override
-            public boolean existsById(Integer integer) {
-                return false;
-            }
-
-            @Override
-            public Iterable<Photo> findAll() {
-                return null;
-            }
-
-            @Override
-            public Iterable<Photo> findAllById(Iterable<Integer> integers) {
-                return null;
-            }
-
-            @Override
-            public long count() {
-                return 0;
-            }
-
-            @Override
-            public void deleteById(Integer integer) {
-
-            }
-
-            @Override
-            public void delete(Photo entity) {
-
-            }
-
-            @Override
-            public void deleteAll(Iterable<? extends Photo> entities) {
-
-            }
-
-            @Override
-            public void deleteAll() {
-
-            }
-        };
-
+        when(fakePhotoRepository.save(photo)).thenThrow(new JDBCException("JDBCException", new SQLException()));
         boolean isSaved = DatasourceHelper.savePhotoToFolder(folderRepository, fakePhotoRepository, folder.getName(), photo);
         assertFalse(isSaved);
     }
@@ -233,72 +170,7 @@ class DatasourceHelperTest {
     @Test
     void testChangeDescription_JDBCException() {
         Photo photo = new Photo(1L, new Folder("test"), "test", "description");
-        PhotoRepository fakePhotoRepository = new PhotoRepository() {
-            @Override
-            public List<Photo> findByFolder(@NotNull Folder folder) {
-                return null;
-            }
-
-            @Override
-            public Optional<Photo> findByIdentifier(long identifier) {
-                return Optional.of(photo);
-            }
-
-            @Override
-            public <S extends Photo> S save(S entity) {
-                throw new JDBCException("JDBCException", new SQLException());
-            }
-
-            @Override
-            public <S extends Photo> Iterable<S> saveAll(Iterable<S> entities) {
-                return null;
-            }
-
-            @Override
-            public Optional<Photo> findById(Integer integer) {
-                return Optional.empty();
-            }
-
-            @Override
-            public boolean existsById(Integer integer) {
-                return false;
-            }
-
-            @Override
-            public Iterable<Photo> findAll() {
-                return null;
-            }
-
-            @Override
-            public Iterable<Photo> findAllById(Iterable<Integer> integers) {
-                return null;
-            }
-
-            @Override
-            public long count() {
-                return 0;
-            }
-
-            @Override
-            public void deleteById(Integer integer) {
-
-            }
-
-            @Override
-            public void delete(Photo entity) {
-
-            }
-
-            @Override
-            public void deleteAll(Iterable<? extends Photo> entities) {
-
-            }
-
-            @Override
-            public void deleteAll() {
-
-            }
-        };
+        when(fakePhotoRepository.save(photo)).thenThrow(new JDBCException("JDBCException", new SQLException()));
         String newDescription = "new description";
         photo.setDescription(newDescription);
         boolean isChanged = DatasourceHelper.changeDescription(fakePhotoRepository, photo);

@@ -108,7 +108,7 @@ public class PhotoStorageServiceDev implements StorageService {
 
             return Files.readAllBytes(filePath);
         } catch (InvalidPathException | IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
             return null;
         }
     }
