@@ -46,11 +46,6 @@ public class GalleryController {
         this.photoRepository = photoRepository;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
-
     @GetMapping("/gallery")
     public String viewPhoto(Model model) {
         Map<String, Long> folders = DatasourceHelper.getFoldersWithPhoto(folderRepository, photoRepository);
