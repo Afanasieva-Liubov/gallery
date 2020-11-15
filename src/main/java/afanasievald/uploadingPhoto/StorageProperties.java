@@ -21,6 +21,12 @@ public class StorageProperties {
 
     private String port;
 
+    private  String datasourceUrl;
+
+    private String datasourceUserName;
+
+    private String datasourcePassword;
+
     public StorageProperties() {
     }
 
@@ -67,5 +73,29 @@ public class StorageProperties {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public String getDatasourceUrl() {
+        return datasourceUrl;
+    }
+
+    public void setDatasourceUrl(String datasourceUrl) {
+        this.datasourceUrl = datasourceUrl;
+    }
+
+    public String getDatasourceUserName() {
+        return datasourceUserName;
+    }
+
+    public void setDatasourceUserName(String datasourceUserName) {
+        this.datasourceUserName = datasourceUserName;
+    }
+
+    public String getDatasourcePassword() {
+        return datasourcePassword;
+    }
+
+    public void setDatasourcePassword(String datasourcePassword) {
+        this.datasourcePassword = datasourcePassword;
     }
 }
