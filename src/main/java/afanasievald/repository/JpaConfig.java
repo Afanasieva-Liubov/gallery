@@ -13,7 +13,7 @@ public class JpaConfig {
     public DataSource getDataSource()
     {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.url("jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC");
+        dataSourceBuilder.url("jdbc:mysql://localhost:3306/db_example?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC");
         dataSourceBuilder.username("root");
         dataSourceBuilder.password("1.3.3.3-,07333f");
         return dataSourceBuilder.build();
